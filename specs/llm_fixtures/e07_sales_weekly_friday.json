@@ -1,0 +1,32 @@
+{
+  "source_name": "Retail prescription volume (TRx)",
+  "fields": {
+    "grain": {
+      "value": "weekly",
+      "evidence": "Weekly prescription counts.",
+      "confidence": 0.9
+    },
+    "calendar_system": {
+      "value": "unknown",
+      "evidence": "",
+      "confidence": 0.5
+    },
+    "week_start_day": {
+      "value": "saturday",
+      "evidence": "Data weeks end on Friday",
+      "confidence": 0.8
+    },
+    "date_label": {
+      "value": "period_end",
+      "evidence": "each row carries the week-ending Friday date",
+      "confidence": 0.9
+    }
+  },
+  "aligned_to_calendar_month": false,
+  "risks": [],
+  "_provenance": {
+    "mode": "recorded",
+    "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+    "prompt_sha": "6c0100fc9650"
+  }
+}

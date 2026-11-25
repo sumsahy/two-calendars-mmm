@@ -1,0 +1,37 @@
+{
+  "source_name": "Spend extract",
+  "fields": {
+    "grain": {
+      "value": "weekly",
+      "evidence": "Data is provided weekly.",
+      "confidence": 0.9
+    },
+    "calendar_system": {
+      "value": "unknown",
+      "evidence": "",
+      "confidence": 0.5
+    },
+    "week_start_day": {
+      "value": "unknown",
+      "evidence": "",
+      "confidence": 0.5
+    },
+    "date_label": {
+      "value": "unknown",
+      "evidence": "",
+      "confidence": 0.5
+    }
+  },
+  "aligned_to_calendar_month": false,
+  "risks": [
+    {
+      "issue": "week_definition_missing",
+      "evidence": "Data is provided weekly."
+    }
+  ],
+  "_provenance": {
+    "mode": "recorded",
+    "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+    "prompt_sha": "6c0100fc9650"
+  }
+}

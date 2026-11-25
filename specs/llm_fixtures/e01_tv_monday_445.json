@@ -1,0 +1,32 @@
+{
+  "source_name": "TV spend feed",
+  "fields": {
+    "grain": {
+      "value": "weekly",
+      "evidence": "Weekly file.",
+      "confidence": 0.9
+    },
+    "calendar_system": {
+      "value": "media_445",
+      "evidence": "Weeks are grouped into a 4-4-5 broadcast calendar.",
+      "confidence": 0.9
+    },
+    "week_start_day": {
+      "value": "monday",
+      "evidence": "from Monday through Sunday",
+      "confidence": 0.9
+    },
+    "date_label": {
+      "value": "period_start",
+      "evidence": "identified by the Monday the week begins",
+      "confidence": 0.9
+    }
+  },
+  "aligned_to_calendar_month": false,
+  "risks": [],
+  "_provenance": {
+    "mode": "recorded",
+    "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+    "prompt_sha": "6c0100fc9650"
+  }
+}

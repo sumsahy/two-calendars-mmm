@@ -1,0 +1,37 @@
+{
+  "source_name": "Email platform costs",
+  "fields": {
+    "grain": {
+      "value": "daily",
+      "evidence": "Daily cost per calendar day (UTC), one row per day.",
+      "confidence": 0.9
+    },
+    "calendar_system": {
+      "value": "gregorian",
+      "evidence": "Daily cost per calendar day (UTC)",
+      "confidence": 0.9
+    },
+    "week_start_day": {
+      "value": "not_applicable",
+      "evidence": "",
+      "confidence": 0.9
+    },
+    "date_label": {
+      "value": "not_applicable",
+      "evidence": "",
+      "confidence": 0.9
+    }
+  },
+  "aligned_to_calendar_month": true,
+  "risks": [
+    {
+      "issue": "utc_day_boundary",
+      "evidence": "per calendar day (UTC)"
+    }
+  ],
+  "_provenance": {
+    "mode": "recorded",
+    "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+    "prompt_sha": "6c0100fc9650"
+  }
+}

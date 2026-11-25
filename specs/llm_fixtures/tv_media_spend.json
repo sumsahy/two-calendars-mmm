@@ -1,0 +1,37 @@
+{
+  "source_name": "TV media spend",
+  "fields": {
+    "grain": {
+      "value": "weekly",
+      "evidence": "Data is delivered weekly.",
+      "confidence": 0.9
+    },
+    "calendar_system": {
+      "value": "media_445",
+      "evidence": "Weeks roll up to the media (broadcast) calendar: 4-4-5 week periods per quarter",
+      "confidence": 0.9
+    },
+    "week_start_day": {
+      "value": "monday",
+      "evidence": "one vendor media-buying week, running Monday to Sunday",
+      "confidence": 0.9
+    },
+    "date_label": {
+      "value": "period_start",
+      "evidence": "The `week_start` column holds the Monday that begins the buying week.",
+      "confidence": 0.9
+    }
+  },
+  "aligned_to_calendar_month": false,
+  "risks": [
+    {
+      "issue": "periods_not_calendar_months",
+      "evidence": "so periods do not line up with calendar months"
+    }
+  ],
+  "_provenance": {
+    "mode": "recorded",
+    "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+    "prompt_sha": "6c0100fc9650"
+  }
+}

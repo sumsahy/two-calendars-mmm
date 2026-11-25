@@ -1,0 +1,32 @@
+{
+  "source_name": "Email spend",
+  "fields": {
+    "grain": {
+      "value": "monthly",
+      "evidence": "Monthly, calendar month.",
+      "confidence": 0.9
+    },
+    "calendar_system": {
+      "value": "gregorian",
+      "evidence": "Costs are summed over all sends in the calendar month.",
+      "confidence": 0.9
+    },
+    "week_start_day": {
+      "value": "not_applicable",
+      "evidence": "",
+      "confidence": 0.9
+    },
+    "date_label": {
+      "value": "period_start",
+      "evidence": "The `month` column is the first day of the calendar month.",
+      "confidence": 0.9
+    }
+  },
+  "aligned_to_calendar_month": true,
+  "risks": [],
+  "_provenance": {
+    "mode": "recorded",
+    "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+    "prompt_sha": "6c0100fc9650"
+  }
+}

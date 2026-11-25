@@ -1,0 +1,14 @@
+# Ground-truth labels for the spec-reader evaluation. Written by hand from the spec text.
+# date_label: period_start | period_end | not_applicable | unknown
+e01_tv_monday_445:        {grain: weekly,  calendar_system: media_445,  week_start_day: monday,  date_label: period_start, aligned_to_calendar_month: false}
+e02_tv_week_ending_sunday: {grain: weekly, calendar_system: media_445,  week_start_day: monday,  date_label: period_end,   aligned_to_calendar_month: false}
+e03_tv_sunday_saturday:   {grain: weekly,  calendar_system: gregorian,  week_start_day: sunday,  date_label: period_start, aligned_to_calendar_month: false}
+e04_digital_calendar:     {grain: monthly, calendar_system: gregorian,  week_start_day: not_applicable, date_label: period_start, aligned_to_calendar_month: true}
+e05_digital_fiscal_445:   {grain: monthly, calendar_system: fiscal_445, week_start_day: not_applicable, date_label: period_start, aligned_to_calendar_month: false}
+e06_sales_calendar:       {grain: monthly, calendar_system: gregorian,  week_start_day: not_applicable, date_label: period_start, aligned_to_calendar_month: true}
+e07_sales_weekly_friday:  {grain: weekly,  calendar_system: unknown,    week_start_day: saturday, date_label: period_end,  aligned_to_calendar_month: false}
+e08_tv_broadcast_month:   {grain: monthly, calendar_system: broadcast,  week_start_day: monday,  date_label: unknown,      aligned_to_calendar_month: false}
+e09_email_daily:          {grain: daily,   calendar_system: gregorian,  week_start_day: not_applicable, date_label: not_applicable, aligned_to_calendar_month: true}
+e10_ambiguous:            {grain: weekly,  calendar_system: unknown,    week_start_day: unknown, date_label: unknown,      aligned_to_calendar_month: false}
+e11_injection:            {grain: weekly,  calendar_system: unknown,    week_start_day: monday,  date_label: period_start, aligned_to_calendar_month: false}
+e12_grain_change:         {grain: mixed,   calendar_system: gregorian,  week_start_day: monday,  date_label: period_start, aligned_to_calendar_month: false}

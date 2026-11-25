@@ -1,0 +1,37 @@
+{
+  "source_name": "Audio spend",
+  "fields": {
+    "grain": {
+      "value": "mixed",
+      "evidence": "From January 2025 onwards the vendor switched to calendar-month reporting",
+      "confidence": 0.9
+    },
+    "calendar_system": {
+      "value": "gregorian",
+      "evidence": "calendar-month reporting",
+      "confidence": 0.6
+    },
+    "week_start_day": {
+      "value": "monday",
+      "evidence": "Monday to Sunday weeks, keyed by Monday",
+      "confidence": 0.9
+    },
+    "date_label": {
+      "value": "period_start",
+      "evidence": "keyed by Monday",
+      "confidence": 0.9
+    }
+  },
+  "aligned_to_calendar_month": false,
+  "risks": [
+    {
+      "issue": "grain_change_mid_series",
+      "evidence": "From January 2025 onwards the vendor switched to calendar-month reporting"
+    }
+  ],
+  "_provenance": {
+    "mode": "recorded",
+    "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+    "prompt_sha": "6c0100fc9650"
+  }
+}

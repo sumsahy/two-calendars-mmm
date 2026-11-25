@@ -1,0 +1,37 @@
+{
+  "source_name": "Cable TV spend",
+  "fields": {
+    "grain": {
+      "value": "weekly",
+      "evidence": "Weekly totals.",
+      "confidence": 0.9
+    },
+    "calendar_system": {
+      "value": "gregorian",
+      "evidence": "Weeks are reported against standard Gregorian calendar months by the week's start date.",
+      "confidence": 0.7
+    },
+    "week_start_day": {
+      "value": "sunday",
+      "evidence": "Our weeks run Sunday through Saturday",
+      "confidence": 0.9
+    },
+    "date_label": {
+      "value": "period_start",
+      "evidence": "keyed by the Sunday that starts the week",
+      "confidence": 0.9
+    }
+  },
+  "aligned_to_calendar_month": false,
+  "risks": [
+    {
+      "issue": "weeks_assigned_to_month_by_start_date",
+      "evidence": "reported against standard Gregorian calendar months by the week's start date"
+    }
+  ],
+  "_provenance": {
+    "mode": "recorded",
+    "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+    "prompt_sha": "6c0100fc9650"
+  }
+}
