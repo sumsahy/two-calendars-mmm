@@ -1,0 +1,9 @@
+{
+  "name": "two-calendars-mmm",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "postCreateCommand": "pip install -e '.[dev]'",
+  "secrets": {
+    "GROQ_API_KEY": {"description": "Groq API key for the live spec-reader run (make llm-live)"}
+  },
+  "customizations": {"vscode": {"extensions": ["ms-python.python"]}}
+}

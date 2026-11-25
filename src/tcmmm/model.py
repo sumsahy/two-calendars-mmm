@@ -75,7 +75,20 @@ def build_design(df: pd.DataFrame) -> Design:
 
 
 # --------------------------------------------------------------------------- model
-def build_model(d: Design) -> pm.Model:
+def beta_prior_sigma(d: Design, prior: str) -> np.ndarray:
+    """'equal': every channel gets the same prior on its max effect (scaled units).
+    'spend_share': prior scale proportional to the channel's share of spend, so a channel's
+    prior ROI does not grow just because its budget is small (D-015)."""
+    C = len(CHANNELS)
+    if prior == "equal":
+        return np.full(C, 0.3)
+    if prior == "spend_share":
+        share = d.x_raw.sum(axis=0) / d.x_raw.sum()
+        return 0.3 * C * share
+    raise ValueError(prior)
+
+
+def build_model(d: Design, prior: str = "equal") -> pm.Model:
     coords = {"month": np.arange(len(d.months)), "channel": CHANNELS, "control": d.control_names}
     lags = np.stack([lag_matrix(d.x[:, i]) for i in range(len(CHANNELS))])  # (C, T, L)
     with pm.Model(coords=coords) as model:
@@ -83,7 +96,7 @@ def build_model(d: Design) -> pm.Model:
         gamma = pm.Normal("gamma", 0.0, 0.1, dims="control")
         alpha = pm.Beta("alpha", 2, 3, dims="channel")            # monthly carryover
         lam = pm.Gamma("lam", 2, 1, dims="channel")               # saturation steepness
-        beta = pm.HalfNormal("beta", 0.3, dims="channel")          # max effect, share of mean sales
+        beta = pm.HalfNormal("beta", beta_prior_sigma(d, prior), dims="channel")  # max effect, share of mean sales
         sigma = pm.HalfNormal("sigma", 0.05)
 
         powers = pt.arange(L_MAX)
@@ -97,8 +110,8 @@ def build_model(d: Design) -> pm.Model:
     return model
 
 
-def fit(d: Design, draws=1000, tune=1500, chains=2, seed=1, target_accept=0.95) -> az.InferenceData:
-    with build_model(d):
+def fit(d: Design, draws=1000, tune=1500, chains=2, seed=1, target_accept=0.95, prior="equal") -> az.InferenceData:
+    with build_model(d, prior):
         idata = pm.sample(draws=draws, tune=tune, chains=chains, cores=chains, random_seed=seed,
                           target_accept=target_accept, progressbar=False)
     return idata

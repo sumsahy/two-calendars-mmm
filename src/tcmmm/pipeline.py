@@ -32,7 +32,7 @@ def model_frame(tv_monthly: pd.DataFrame, vendor_dir: Path) -> pd.DataFrame:
 
 
 def run_scenario(name: str, cfg: dict, out_root="results", data_root="data", draws=1000, tune=1500,
-                 versions=VERSIONS) -> dict:
+                 versions=VERSIONS, prior="equal") -> dict:
     t0 = time.time()
     sdir = write_scenario(name, cfg, data_root)
     vendor = sdir / "vendor"
@@ -48,6 +48,7 @@ def run_scenario(name: str, cfg: dict, out_root="results", data_root="data", dra
 
     result = {
         "scenario": name,
+        "prior": prior,
         "truth": {**truth, "verdict_if_known": "Helps" if truth["shift_delta_sales"] > 0 else "Hurts"},
         "conservation": conservation,
         "distortion": dist.to_dict(orient="records"),
@@ -55,7 +56,7 @@ def run_scenario(name: str, cfg: dict, out_root="results", data_root="data", dra
     }
     for v in versions:
         d = build_design(model_frame(tv_versions[v], vendor))
-        idata = fit(d, draws=draws, tune=tune, seed=cfg["seed"] % 10_000)
+        idata = fit(d, draws=draws, tune=tune, seed=cfg["seed"] % 10_000, prior=prior)
         cf = counterfactuals(d, idata, cfg["reallocation"]["tv_cut_share"])
         result["versions"][v] = {**summarise(cf), "diagnostics": diagnostics(idata)}
         print(f"[{name}] {v}: P(shift helps)={result['versions'][v]['p_shift_helps']:.2f} "
@@ -72,11 +73,14 @@ def main():
     ap.add_argument("--draws", type=int, default=1000)
     ap.add_argument("--tune", type=int, default=1500)
     ap.add_argument("--config", default="config/scenarios.yaml")
+    ap.add_argument("--prior", default="equal", choices=["equal", "spend_share"])
+    ap.add_argument("--out", default=None)
     a = ap.parse_args()
     sc = load_scenarios(a.config)
     names = list(sc) if a.all else [a.scenario]
+    out = a.out or ("results" if a.prior == "equal" else f"results_{a.prior}")
     for n in names:
-        run_scenario(n, sc[n], draws=a.draws, tune=a.tune)
+        run_scenario(n, sc[n], out_root=out, draws=a.draws, tune=a.tune, prior=a.prior)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,20 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test-and-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -e ".[dev]"
+      - name: Unit and integration tests (recorded LLM readings, no key needed)
+        run: make test
+      - name: Refresh gate on a clean drop (must not BLOCK)
+        run: make validate
+      - name: Refresh gate on a bad drop (must BLOCK)
+        run: |
+          make demo-bad-drop
+          python -c "import json,sys; r=json.load(open('reports/validation/bad_drop/validation_report.json')); sys.exit(0 if r['status']=='BLOCK' else 1)"
+      - name: Spec reader eval (no misaligned spec may PASS)
+        run: make eval
