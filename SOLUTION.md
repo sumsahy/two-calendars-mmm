@@ -142,5 +142,6 @@ Vendor files: `data/<scenario>/vendor/` (`tv_media_weekly.csv` with `week_start`
 | `reports/validation/` | Gate report and spec-reader eval | |
 | `results/`, `results_spend_share/` | Per-run JSON (equal / spend-share prior) | |
 | `deck/project/` | 8-slide deck source (live deck: https://claude.ai/artifact/Hhify7fg5wfxRMDZzG3m4F) | |
+| `docs/flowchart.md` | End-to-end, client-decision and gate flowcharts (Mermaid) | |
 | `docs/` | Framing, decision log, assumptions, AI usage log, results log, review findings, limitations, client note, interview Q&A | |
 | `Makefile`, `.github/workflows/ci.yml`, `.devcontainer/` | One-command runs, CI, Codespaces | `make install` then `make all` |
