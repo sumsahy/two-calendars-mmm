@@ -5,7 +5,7 @@
 1. **Does the calendar mismatch change the recommendation, and how confident are we?**
 2. **How do we stop it happening again on every data refresh?**
 
-> Start here: [`docs/00_problem_framing.md`](docs/00_problem_framing.md) (hypotheses and the pre-registered decision rule), then open [`reports/before_after.html`](reports/before_after.html) in a browser.
+> **Solution Document: [`SOLUTION.md`](SOLUTION.md).** Then [`docs/00_problem_framing.md`](docs/00_problem_framing.md) (hypotheses and the pre-registered decision rule), then open [`reports/before_after.html`](reports/before_after.html) in a browser.
 
 ## Answer in one screen
 
