@@ -6,3 +6,6 @@ __pycache__/
 data/*/_truth/truth_daily.csv
 results/*.nc
 .venv/
+logs/
+data/replicates/*/_truth/truth_daily.csv
+data/*/_truth/truth_daily.csv

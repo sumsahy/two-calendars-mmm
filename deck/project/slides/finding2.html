@@ -1,0 +1,11 @@
+<section id="finding2" class="alt">
+<p class="eyebrow">Finding 2: the model, not the calendar</p>
+<h2>Default priors inflate the smallest channel, even on perfect data</h2>
+<div class="row">
+<div class="card"><p class="tag">EMAIL SHARE OF SALES, EQUAL PRIOR</p><p class="big orange">11.1%</p><p>Same prior for every channel on spend scaled by its own average: a dollar of email starts out worth several dollars of TV.</p></div>
+<div class="card"><p class="tag">SPEND-SHARE PRIOR</p><p class="big blue">5.0%</p><p>Prior effect in proportion to each channel’s share of spend.</p></div>
+<div class="card"><p class="tag">TRUTH</p><p class="big">4.2%</p><p>What the simulated world actually gave email.</p></div>
+</div>
+<p style="margin-top:40px;max-width:1600px;font-size:28px">Exhibit 2 flagged email at 11% as “high efficiency”. That number deserves a second look on the real data. With equal priors, perfect data said “Holds” in 6 of 13 runs, once wrongly; with spend-share priors, in none.</p>
+<aside>Perfect data here means the oracle version, so this bias has nothing to do with the calendar. The 11% match with Exhibit 2 is a coincidence of our setup, but it shows how a contribution share like that can come from the prior. Spend-share priors are the approach PyMC-Marketing's docs recommend; they can understate a genuinely efficient small channel, so the real fix is calibrating with lift tests.</aside>
+</section>

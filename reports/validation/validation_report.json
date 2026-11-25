@@ -1,0 +1,203 @@
+{
+  "vendor_dir": "data/main/vendor",
+  "sources": {
+    "tv_media_weekly.csv": {
+      "source": "tv_media_weekly.csv",
+      "status": "TRANSFORM",
+      "findings": [
+        {
+          "rung": "data",
+          "status": "PASS",
+          "message": "dates fall on monday, consistent with spec"
+        },
+        {
+          "rung": "data",
+          "status": "WARN",
+          "message": "31 weeks cross a month end and must be split"
+        },
+        {
+          "rung": "contract",
+          "status": "TRANSFORM",
+          "message": "weekly rows: split each week across its days, then sum by calendar month"
+        },
+        {
+          "rung": "contract",
+          "status": "WARN",
+          "message": "file carries period columns ['media_period', 'media_year']: never join these to a calendar-month key"
+        },
+        {
+          "rung": "contract",
+          "status": "TRANSFORM",
+          "message": "apportioning conserves spend to the cent (total 24,296,495.32)"
+        }
+      ],
+      "accepted": {
+        "grain": "weekly",
+        "calendar_system": "media_445",
+        "week_start_day": "monday",
+        "date_label": "period_start"
+      },
+      "transform": "apportion_by_day(week_start_day=monday, date_label=period_start)",
+      "llm_mode": "recorded",
+      "llm_provenance": {
+        "mode": "recorded",
+        "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+        "prompt_sha": "6c0100fc9650"
+      },
+      "profile": {
+        "file": "data/main/vendor/tv_media_weekly.csv",
+        "date_column": "week_start",
+        "rows": 158,
+        "first": "2022-12-26",
+        "last": "2025-12-29",
+        "grain": "weekly",
+        "dominant_weekday": "monday",
+        "weekday_purity": 1.0,
+        "all_first_of_month": false,
+        "duplicates": 0,
+        "period_columns": [
+          "media_period",
+          "media_year"
+        ],
+        "spacing_days_counts": {
+          "7": 157
+        },
+        "weeks_crossing_month_end": 31,
+        "missing_periods": 0
+      }
+    },
+    "digital_monthly.csv": {
+      "source": "digital_monthly.csv",
+      "status": "PASS",
+      "findings": [
+        {
+          "rung": "contract",
+          "status": "PASS",
+          "message": "calendar months, joins directly"
+        }
+      ],
+      "accepted": {
+        "grain": "monthly",
+        "calendar_system": "gregorian",
+        "week_start_day": "not_applicable",
+        "date_label": "period_start"
+      },
+      "transform": null,
+      "llm_mode": "recorded",
+      "llm_provenance": {
+        "mode": "recorded",
+        "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+        "prompt_sha": "6c0100fc9650"
+      },
+      "profile": {
+        "file": "data/main/vendor/digital_monthly.csv",
+        "date_column": "month",
+        "rows": 36,
+        "first": "2023-01-01",
+        "last": "2025-12-01",
+        "grain": "monthly",
+        "dominant_weekday": "wednesday",
+        "weekday_purity": 0.16666666666666666,
+        "all_first_of_month": true,
+        "duplicates": 0,
+        "period_columns": [],
+        "spacing_days_counts": {
+          "31": 20,
+          "30": 12,
+          "28": 2,
+          "29": 1
+        },
+        "missing_periods": 0
+      }
+    },
+    "email_monthly.csv": {
+      "source": "email_monthly.csv",
+      "status": "PASS",
+      "findings": [
+        {
+          "rung": "contract",
+          "status": "PASS",
+          "message": "calendar months, joins directly"
+        }
+      ],
+      "accepted": {
+        "grain": "monthly",
+        "calendar_system": "gregorian",
+        "week_start_day": "not_applicable",
+        "date_label": "period_start"
+      },
+      "transform": null,
+      "llm_mode": "recorded",
+      "llm_provenance": {
+        "mode": "recorded",
+        "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+        "prompt_sha": "6c0100fc9650"
+      },
+      "profile": {
+        "file": "data/main/vendor/email_monthly.csv",
+        "date_column": "month",
+        "rows": 36,
+        "first": "2023-01-01",
+        "last": "2025-12-01",
+        "grain": "monthly",
+        "dominant_weekday": "wednesday",
+        "weekday_purity": 0.16666666666666666,
+        "all_first_of_month": true,
+        "duplicates": 0,
+        "period_columns": [],
+        "spacing_days_counts": {
+          "31": 20,
+          "30": 12,
+          "28": 2,
+          "29": 1
+        },
+        "missing_periods": 0
+      }
+    },
+    "sales_monthly.csv": {
+      "source": "sales_monthly.csv",
+      "status": "PASS",
+      "findings": [
+        {
+          "rung": "contract",
+          "status": "PASS",
+          "message": "calendar months, joins directly"
+        }
+      ],
+      "accepted": {
+        "grain": "monthly",
+        "calendar_system": "gregorian",
+        "week_start_day": "not_applicable",
+        "date_label": "period_start"
+      },
+      "transform": null,
+      "llm_mode": "recorded",
+      "llm_provenance": {
+        "mode": "recorded",
+        "produced_by": "Claude Opus 5.5, in-session, following prompts/spec_reader.md exactly; NOT a live API call",
+        "prompt_sha": "6c0100fc9650"
+      },
+      "profile": {
+        "file": "data/main/vendor/sales_monthly.csv",
+        "date_column": "month",
+        "rows": 36,
+        "first": "2023-01-01",
+        "last": "2025-12-01",
+        "grain": "monthly",
+        "dominant_weekday": "wednesday",
+        "weekday_purity": 0.16666666666666666,
+        "all_first_of_month": true,
+        "duplicates": 0,
+        "period_columns": [],
+        "spacing_days_counts": {
+          "31": 20,
+          "30": 12,
+          "28": 2,
+          "29": 1
+        },
+        "missing_periods": 0
+      }
+    }
+  },
+  "status": "TRANSFORM"
+}

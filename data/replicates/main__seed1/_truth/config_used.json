@@ -1,0 +1,48 @@
+{
+  "seed": 20262125,
+  "start": "2023-01-01",
+  "end": "2025-12-31",
+  "burn_in_days": 120,
+  "base_daily_sales": 150000,
+  "trend_per_year": 0.04,
+  "seasonality_amp": 0.05,
+  "january_dip": 0.08,
+  "sales_noise_sd": 0.03,
+  "weekend_delivery_weight": 1.35,
+  "delivery_noise_sd": 0.15,
+  "tv": {
+    "weekly_mean": 250000,
+    "weekly_sd_log": 0.25,
+    "flighting": "bursty",
+    "flight_weeks": [
+      3,
+      7
+    ],
+    "gap_weeks": [
+      2,
+      5
+    ],
+    "half_life_days": 14,
+    "avg_roi": 1.6,
+    "saturation": 0.8
+  },
+  "digital": {
+    "monthly_mean": 450000,
+    "monthly_sd_log": 0.2,
+    "corr_with_tv": 0.3,
+    "half_life_days": 5,
+    "avg_roi": 1.7,
+    "saturation": 0.7
+  },
+  "email": {
+    "monthly_mean": 120000,
+    "monthly_sd_log": 0.25,
+    "corr_with_tv": 0.0,
+    "half_life_days": 3,
+    "avg_roi": 2.5,
+    "saturation": 0.5
+  },
+  "reallocation": {
+    "tv_cut_share": 0.15
+  }
+}

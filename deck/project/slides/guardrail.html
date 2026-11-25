@@ -1,0 +1,22 @@
+<section id="guardrail">
+<p class="eyebrow">So it never happens again</p>
+<h2>A refresh gate that an LLM can only make stricter</h2>
+<div class="row" style="gap:56px;align-items:flex-start">
+<div style="flex:1.25">
+<div class="rung"><p class="n">1</p><div><h3>Schema</h3><p>The LLM reads each vendor spec and answers in fixed fields only: grain, calendar, week start, date label.</p></div></div>
+<div class="rung"><p class="n">2</p><div><h3>Grounding</h3><p>Every claim must quote the spec word for word. A quote not found in the spec is thrown out.</p></div></div>
+<div class="rung"><p class="n">3</p><div><h3>Data cross-check</h3><p>Claims must match the file itself: spacing of dates, which weekday they fall on, first-of-month keys.</p></div></div>
+<div class="rung" style="border-bottom:2px solid #D5D0C4"><p class="n">4</p><div><h3>Contract</h3><p>Anything unknown blocks the refresh. Weekly data must be split by day, and the split must conserve spend to the cent.</p></div></div>
+</div>
+<div class="card" style="flex:1"><h3 style="font-size:32px">Proven by tests</h3>
+<ul style="font-size:26px;line-height:1.4;margin:8px 0 0;padding-left:32px">
+<li>A made-up quote is discarded</li>
+<li>An LLM that obeys an instruction hidden in a spec is overruled by the data</li>
+<li>A vendor silently switching to week-ending dates is blocked</li>
+<li>An unregistered file is never joined</li>
+</ul>
+<p style="font-size:26px;margin-top:24px"><b>12 tricky specs, 0 misaligned ones passed.</b> The LLM reads what the data can’t say; the data checks what the LLM can’t be trusted to say.</p>
+</div>
+</div>
+<aside>Why an LLM at all: a Sunday date could mean week starting or week ending, and a first-of-month date could be a fiscal month. Only the spec says which. The eval labels and the recorded readings were both written by Claude, so the score is not independent; a live Groq run is the independent check.</aside>
+</section>

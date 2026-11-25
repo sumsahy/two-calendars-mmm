@@ -1,0 +1,170 @@
+[
+  {
+    "run": "main__seed1",
+    "version": "oracle",
+    "p_shift_helps": 0.79,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed1",
+    "version": "naive_445",
+    "p_shift_helps": 0.5158333333333334,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed1",
+    "version": "naive_weekstart",
+    "p_shift_helps": 0.9191666666666667,
+    "verdict": "Holds",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed1",
+    "version": "corrected",
+    "p_shift_helps": 0.7725,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed2",
+    "version": "oracle",
+    "p_shift_helps": 0.6258333333333334,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed2",
+    "version": "naive_445",
+    "p_shift_helps": 0.5941666666666666,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed2",
+    "version": "naive_weekstart",
+    "p_shift_helps": 0.6466666666666666,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed2",
+    "version": "corrected",
+    "p_shift_helps": 0.6825,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed3",
+    "version": "oracle",
+    "p_shift_helps": 0.6875,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed3",
+    "version": "naive_445",
+    "p_shift_helps": 0.6483333333333333,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed3",
+    "version": "naive_weekstart",
+    "p_shift_helps": 0.7816666666666666,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "main__seed3",
+    "version": "corrected",
+    "p_shift_helps": 0.6933333333333334,
+    "verdict": "Leans holds, not supported",
+    "truth": "Helps"
+  },
+  {
+    "run": "tv_clearly_better__seed1",
+    "version": "oracle",
+    "p_shift_helps": 0.7458333333333333,
+    "verdict": "Leans holds, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed1",
+    "version": "naive_445",
+    "p_shift_helps": 0.4008333333333333,
+    "verdict": "Leans reverses, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed1",
+    "version": "naive_weekstart",
+    "p_shift_helps": 0.88,
+    "verdict": "Holds",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed1",
+    "version": "corrected",
+    "p_shift_helps": 0.7558333333333334,
+    "verdict": "Leans holds, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed2",
+    "version": "oracle",
+    "p_shift_helps": 0.49333333333333335,
+    "verdict": "Leans reverses, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed2",
+    "version": "naive_445",
+    "p_shift_helps": 0.4891666666666667,
+    "verdict": "Leans reverses, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed2",
+    "version": "naive_weekstart",
+    "p_shift_helps": 0.56,
+    "verdict": "Leans holds, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed2",
+    "version": "corrected",
+    "p_shift_helps": 0.5333333333333333,
+    "verdict": "Leans holds, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed3",
+    "version": "oracle",
+    "p_shift_helps": 0.5958333333333333,
+    "verdict": "Leans holds, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed3",
+    "version": "naive_445",
+    "p_shift_helps": 0.34833333333333333,
+    "verdict": "Leans reverses, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed3",
+    "version": "naive_weekstart",
+    "p_shift_helps": 0.7325,
+    "verdict": "Leans holds, not supported",
+    "truth": "Hurts"
+  },
+  {
+    "run": "tv_clearly_better__seed3",
+    "version": "corrected",
+    "p_shift_helps": 0.6125,
+    "verdict": "Leans holds, not supported",
+    "truth": "Hurts"
+  }
+]

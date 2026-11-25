@@ -1,0 +1,7 @@
+{"v":5,"createdOnFiles":{"v":1,"at":"2026-11-25T07:50:00Z"},"lists":"css","format":{"v":1,"shared":["project/deck.css"]},
+"title":"The Two Calendars: does the 15% TV-to-digital shift still hold?",
+"order":["cover","answer","problem","approach","finding1","finding2","guardrail","next"],
+"cover":"cover",
+"sections":{"s1":{"description":"The question and the short answer","start":"cover"},"s2":{"description":"What went wrong and how we tested it","start":"problem"},"s3":{"description":"What we found","start":"finding1"},"s4":{"description":"How it never happens again, and the next 10 days","start":"guardrail"}},
+"faces":{"space-grotesk":{"family":"Space Grotesk","href":"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@400;600&display=swap"},"inter":{"family":"Inter","href":"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@400;600&display=swap"}},
+"designSystems":[]}

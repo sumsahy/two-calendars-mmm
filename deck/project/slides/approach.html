@@ -1,0 +1,17 @@
+<section id="approach" class="alt">
+<p class="eyebrow">How we tested it</p>
+<h2>Four versions of TV, one model, a known truth</h2>
+<div class="flow">
+<div class="step"><h3 style="font-size:32px">Synthetic world</h3><p>Daily truth with a known effect per channel</p></div>
+<div class="arrow"><x-shape kind="arrow-right" style="background:#5D6675"></x-shape></div>
+<div class="step"><h3 style="font-size:32px">Vendor files</h3><p>TV weekly on 4-4-5; the rest monthly</p></div>
+<div class="arrow"><x-shape kind="arrow-right" style="background:#5D6675"></x-shape></div>
+<div class="step"><h3 style="font-size:32px">4 TV versions</h3><p>Oracle, naive 4-4-5, naive week-start, corrected</p></div>
+<div class="arrow"><x-shape kind="arrow-right" style="background:#5D6675"></x-shape></div>
+<div class="step"><h3 style="font-size:32px">Same MMM</h3><p>Bayesian, adstock and saturation, in PyMC</p></div>
+<div class="arrow"><x-shape kind="arrow-right" style="background:#5D6675"></x-shape></div>
+<div class="step"><h3 style="font-size:32px">Fixed rule</h3><p>Holds if P(shift helps) ≥ 0.80</p></div>
+</div>
+<p style="margin-top:56px;max-width:1500px">The rule and the scenarios were committed to git before any model ran. The main world is a deliberate close call: a data error can only flip a decision that sits near the boundary. Six more worlds and extra random seeds test the rest.</p>
+<aside>Oracle uses the true daily TV delivery: not available in real life, it separates calendar error from model error.</aside>
+</section>
