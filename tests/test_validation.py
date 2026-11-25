@@ -67,14 +67,22 @@ def test_grounding_tolerates_markdown_and_case():
 
 
 # ------------------------------------------------------------------ rung 3: data cross-check
-def test_llm_that_obeys_an_injection_is_overruled_by_data(vendor_dir):
-    """Simulate a compromised reading: LLM claims the weekly TV file is calendar-monthly."""
-    compromised = copy.deepcopy(TV_FIX)
-    compromised["fields"]["grain"] = {"value": "monthly", "evidence": "Data is delivered weekly.", "confidence": 1}
-    compromised["fields"]["calendar_system"] = {"value": "gregorian", "evidence": "", "confidence": 1}
-    v = verify("tv", compromised, TV_SPEC, profile(vendor_dir / "tv_media_weekly.csv"))
-    assert v.status == BLOCK
-    assert any("data is 'weekly'" in f.message for f in v.findings)
+def test_llm_that_obeys_an_injection_is_overruled(vendor_dir):
+    """Compromised reading: LLM claims the weekly TV file is calendar-monthly."""
+    prof = profile(vendor_dir / "tv_media_weekly.csv")
+    # (a) its quote doesn't support "monthly": claim discarded, gate falls back to the data and never PASSes
+    c1 = copy.deepcopy(TV_FIX)
+    c1["fields"]["grain"] = {"value": "monthly", "evidence": "Data is delivered weekly.", "confidence": 1}
+    c1["fields"]["calendar_system"] = {"value": "gregorian", "evidence": "", "confidence": 1}
+    v1 = verify("tv", c1, TV_SPEC, prof)
+    assert v1.accepted["grain"] == "unknown" and v1.status != PASS
+    # (b) a real quote that mentions months: grounded, but the data says weekly -> BLOCK
+    c2 = copy.deepcopy(TV_FIX)
+    c2["fields"]["grain"] = {"value": "monthly", "evidence": "so periods do not line up with calendar months",
+                             "confidence": 1}
+    v2 = verify("tv", c2, TV_SPEC, prof)
+    assert v2.status == BLOCK
+    assert any("data is 'weekly'" in f.message for f in v2.findings)
 
 
 def test_vendor_silently_switches_to_week_ending_dates(vendor_dir, tmp_path):
@@ -118,3 +126,83 @@ def test_no_misaligned_spec_ever_passes():
     res = evaluate()
     assert res["summary"]["unsafe_passes"] == 0
     assert res["summary"]["n_specs"] == 12
+
+
+# ------------------------------------------------------------------ added after the independent review (R-03)
+@pytest.mark.parametrize("quote", [
+    "The `week_start` column holds the Sunday that begins the buying week.",   # one-word swap
+    "The `week_start` column holds the Monday that ends the buying week.",     # one-word swap
+    "Each row is one vendor media-buying week, running Sunday to Saturday.",
+    "Sunday", "weekly",                                                         # too short to prove anything
+])
+def test_near_miss_quotes_are_not_grounded(quote):
+    assert not is_grounded(quote, TV_SPEC)
+
+
+def test_real_quote_that_does_not_support_the_value_is_discarded(vendor_dir, tmp_path):
+    """Week-ending drop + LLM claims week starts Sunday, quoting a REAL sentence that says Monday."""
+    drop = tmp_path / "vendor"
+    shutil.copytree(vendor_dir, drop)
+    tv = pd.read_csv(drop / "tv_media_weekly.csv", parse_dates=["week_start"])
+    tv["week_start"] = (tv["week_start"] + pd.Timedelta(days=6)).dt.strftime("%Y-%m-%d")
+    tv.to_csv(drop / "tv_media_weekly.csv", index=False)
+    bad = copy.deepcopy(TV_FIX)
+    bad["fields"]["week_start_day"] = {"value": "sunday", "evidence": "running Monday to Sunday", "confidence": 0.9}
+    v = verify("tv", bad, TV_SPEC, profile(drop / "tv_media_weekly.csv"))
+    assert v.accepted["week_start_day"] == "unknown"
+    assert v.status == BLOCK
+
+
+def test_llm_cannot_pass_a_fiscal_month_file_as_calendar_month(vendor_dir):
+    spec = (ROOT / "specs/eval/e05_digital_fiscal_445.md").read_text()
+    raw = json.loads((ROOT / "specs/llm_fixtures/e05_digital_fiscal_445.json").read_text())
+    raw["fields"]["calendar_system"] = {"value": "gregorian", "confidence": 0.9,
+                                        "evidence": "The month column shows the first day of the matching calendar month"}
+    assert verify("e05", raw, spec, profile(vendor_dir / "digital_monthly.csv")).status == BLOCK
+
+
+def test_injection_is_flagged_without_relying_on_the_llm():
+    spec = (ROOT / "specs/eval/e11_injection.md").read_text()
+    raw = json.loads((ROOT / "specs/llm_fixtures/e11_injection.json").read_text())
+    raw["risks"] = []  # a reader that failed to mention it
+    v = verify("e11", raw, spec, prof=None)
+    assert any(f.rung == "spec_scan" and "automated readers" in f.message for f in v.findings)
+
+
+def _drop(vendor_dir, tmp_path, fn):
+    d = tmp_path / "vendor"
+    shutil.copytree(vendor_dir, d)
+    fn(d)
+    return run_gate(d)
+
+
+def test_a_few_off_weekday_rows_block(vendor_dir, tmp_path):
+    def f(d):
+        tv = pd.read_csv(d / "tv_media_weekly.csv", parse_dates=["week_start"])
+        tv.loc[tv.index[::60], "week_start"] += pd.Timedelta(days=1)
+        tv["week_start"] = tv["week_start"].dt.strftime("%Y-%m-%d")
+        tv.to_csv(d / "tv_media_weekly.csv", index=False)
+    assert _drop(vendor_dir, tmp_path, f)["sources"]["tv_media_weekly.csv"]["status"] == BLOCK
+
+
+def test_negative_or_missing_spend_blocks(vendor_dir, tmp_path):
+    def f(d):
+        tv = pd.read_csv(d / "tv_media_weekly.csv")
+        tv.loc[5, "tv_spend"] = -1e7
+        tv.loc[6, "tv_spend"] = float("nan")
+        tv.to_csv(d / "tv_media_weekly.csv", index=False)
+    assert _drop(vendor_dir, tmp_path, f)["sources"]["tv_media_weekly.csv"]["status"] == BLOCK
+
+
+def test_tv_that_does_not_cover_the_sales_window_blocks(vendor_dir, tmp_path):
+    def f(d):
+        tv = pd.read_csv(d / "tv_media_weekly.csv")
+        tv.iloc[:80].to_csv(d / "tv_media_weekly.csv", index=False)
+    rep = _drop(vendor_dir, tmp_path, f)
+    assert rep["sources"]["tv_media_weekly.csv"]["status"] == BLOCK
+    assert any("sales run" in x["message"] for x in rep["sources"]["tv_media_weekly.csv"]["findings"])
+
+
+def test_eval_no_misaligned_spec_passes_or_gets_a_wrong_transform():
+    s = evaluate()["summary"]
+    assert s["unsafe_passes"] == 0 and s["n_misaligned"] == 9

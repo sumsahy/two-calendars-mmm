@@ -13,16 +13,18 @@ See [`docs/results_log.md`](docs/results_log.md) for every number and the run th
 
 **Verdict: the 15% TV-to-digital shift is not supported by the data, and not disproven.** Hold it, don't expand it, and settle it with a geo holdout test.
 
-| Finding | Evidence (26 simulated runs: 7 worlds + 6 extra seeds, under 2 priors) |
+| Finding | Evidence (26 simulated runs: 7 worlds + 6 extra seeds, under 2 priors; unconverged fits excluded) |
 |---|---|
 | The calendar error is large | Monthly TV off by 21% (4-4-5 period read as a month) and 18% (week-start month) of an average month; the day-split fix 1.4% |
-| **The fix works** | Corrected data moves P(shift helps) by just +0.01 vs perfectly aligned data; never a confident wrong call |
-| **The week-start shortcut manufactures confidence** | Raises P(shift helps) by +0.07 to +0.09 on average, above perfect data in 23 of 26 runs; called a sales-reducing shift "Holds" 4 times |
-| **A second, separate issue: priors** | Equal priors credit email with 11% of sales even on perfect data (truth 4%); spend-share priors give 5% |
+| **The fix works** | Corrected data stays within Monte Carlo noise of perfectly aligned data (mean change in P +0.01, mean absolute 0.02 to 0.03); never a confident wrong call |
+| **The week-start shortcut manufactures confidence** | Raises P(shift helps) by +0.06 to +0.09 on average, above perfect data in 22 of 25 runs; called a sales-reducing shift "Holds" 4 times |
+| **The model itself leans toward the shift** (found by independent review) | On perfect data the monthly model recovers a median of about half of TV's true marginal ROI; equal priors put email at 11% of sales vs a true 4%; one perfect-data fit said "Holds" on a shift that hurts |
 | **Too little data to decide** | With spend-share priors, even perfect monthly data never reached P ≥ 0.80 in 13 runs |
-| Guardrail | Refresh gate: 0 of 12 tricky vendor specs passed while misaligned; adversarial tests for hallucinated quotes, prompt injection and silent week-ending switches |
+| Guardrail | Refresh gate: 0 of 9 misaligned vendor specs got through; adversarial tests for near-miss quotes, prompt injection, silent week-ending switches, coverage gaps and bad values |
 
-Deck (8 slides): https://claude.ai/artifact/Hhify7fg5wfxRMDZzG3m4F (source in `deck/project/`).
+Independent review and what we did about it: [`docs/review_findings.md`](docs/review_findings.md).
+
+Deck (8 slides): https://claude.ai/artifact/Hhify7fg5wfxRMDZzG3m4F (source in `deck/project/`). Interactive report: https://claude.ai/artifact/LFRS8z7sXN8zSRPRhy1CQr (also `reports/before_after.html`).
 
 ## How it works
 
@@ -64,7 +66,7 @@ make llm-live       # needs GROQ_API_KEY (Codespaces secret); set GROQ_MODEL if 
 
 ## The validation gate in one paragraph
 
-The data file can tell us grain and which weekday dates fall on. It cannot tell us whether a Sunday date means "week starting" or "week ending", or whether a first-of-month date is a calendar month or a fiscal month: that lives only in the vendor's spec. So an LLM reads the spec and returns structured claims with verbatim quotes. Every claim then passes four rungs: **schema** (allowed values only), **grounding** (the quote must exist in the spec), **data cross-check** (the claim must match the file's own profile) and **contract** (anything unknown blocks; weekly data must go through the day-split transform, which is re-checked to conserve spend to the cent). The LLM can only make the gate stricter, never looser.
+The data file can tell us grain and which weekday dates fall on. It cannot tell us whether a Sunday date means "week starting" or "week ending", or whether a first-of-month date is a calendar month or a fiscal month: that lives only in the vendor's spec. So an LLM reads the spec and returns structured claims with verbatim quotes. Every claim then passes four rungs: **schema** (allowed values only), **grounding** (the quote must appear verbatim and must itself support the value), an independent **spec scan** that blocks on any disagreement, **data cross-check** (the claim must match the file's own profile) and **contract** (anything unknown blocks; weekly data must go through the day-split transform, which is re-checked to conserve spend to the cent). The LLM can only make the gate stricter, never looser.
 
 ## Decision trail
 
@@ -77,5 +79,6 @@ The data file can tell us grain and which weekday dates fall on. It cannot tell 
 | [`docs/risks_limitations.md`](docs/risks_limitations.md) | What this does not prove |
 | [`docs/client_note.md`](docs/client_note.md) | The 10 days before the Q3 readout |
 | [`docs/interview_qa.md`](docs/interview_qa.md) | Likely questions, short answers |
+| [`docs/review_findings.md`](docs/review_findings.md) | Independent review findings and dispositions |
 
 All data is synthetic. No client data, no secrets in git.

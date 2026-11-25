@@ -14,12 +14,12 @@ Transform: `apportion_by_day(week_start_day=monday, date_label=period_start)`
 
 ## digital_monthly.csv: PASS
 Verified spec claims: grain=monthly, calendar_system=gregorian, week_start_day=not_applicable, date_label=period_start
-- [PASS] contract: calendar months, joins directly
+- [PASS] contract: calendar months (LLM and spec scan agree), joins directly
 
 ## email_monthly.csv: PASS
 Verified spec claims: grain=monthly, calendar_system=gregorian, week_start_day=not_applicable, date_label=period_start
-- [PASS] contract: calendar months, joins directly
+- [PASS] contract: calendar months (LLM and spec scan agree), joins directly
 
 ## sales_monthly.csv: PASS
 Verified spec claims: grain=monthly, calendar_system=gregorian, week_start_day=not_applicable, date_label=period_start
-- [PASS] contract: calendar months, joins directly
+- [PASS] contract: calendar months (LLM and spec scan agree), joins directly

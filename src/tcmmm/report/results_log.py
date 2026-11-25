@@ -13,13 +13,33 @@ PRIORS = [("spend_share", "results_spend_share", "Main analysis: spend-share pri
           ("equal", "results", "Sensitivity: equal prior")]
 
 
+RHAT_MAX, DIV_MAX = 1.05, 20  # D-020: fits beyond these are flagged and left out of tallies
+
+
 def _load(d: Path) -> list[dict]:
     return [json.loads(p.read_text()) for p in sorted(d.glob("*/result.json"))]
+
+
+def converged(res: dict) -> bool:
+    dg = res["diagnostics"]
+    return dg["max_rhat"] <= RHAT_MAX and dg["divergences"] <= DIV_MAX
+
+
+def flagged(runs: list[dict]) -> list[str]:
+    out = []
+    for r in runs:
+        for v in VERS:
+            dg = r["versions"][v]["diagnostics"]
+            if not converged(r["versions"][v]):
+                out.append(f"{r['scenario']} / {v}: r-hat {dg['max_rhat']:.3f}, {dg['divergences']} divergences")
+    return out
 
 
 def _cell(r: dict, v: str) -> str:
     res = r["versions"][v]
     p, verdict = res["p_shift_helps"], res["verdict"]
+    if not converged(res):
+        return f"{p:.2f} (not converged)"
     wrong = (verdict == "Holds" and r["truth"]["verdict_if_known"] == "Hurts") or \
             (verdict == "Reverses" and r["truth"]["verdict_if_known"] == "Helps")
     short = {"Holds": "Holds", "Reverses": "Reverses", "Leans holds, not supported": "n.s. (leans holds)",
@@ -55,6 +75,8 @@ def tally(runs: list[dict]) -> dict:
     c = {v: {"wrong_confident": 0, "correct_confident": 0, "not_supported": 0} for v in VERS}
     for r in runs:
         for v in VERS:
+            if not converged(r["versions"][v]):
+                continue
             verdict = r["versions"][v]["verdict"]
             truth = r["truth"]["verdict_if_known"]
             if verdict in ("Holds", "Reverses"):
@@ -68,9 +90,31 @@ def tally(runs: list[dict]) -> dict:
 def bias_vs_oracle(runs: list[dict]) -> dict:
     out = {}
     for v in VERS:
-        d = [r["versions"][v]["p_shift_helps"] - r["versions"]["oracle"]["p_shift_helps"] for r in runs]
-        out[v] = {"mean": sum(d) / len(d), "higher": sum(x > 0 for x in d), "n": len(d)}
+        d = [r["versions"][v]["p_shift_helps"] - r["versions"]["oracle"]["p_shift_helps"] for r in runs
+             if converged(r["versions"][v]) and converged(r["versions"]["oracle"])]
+        out[v] = {"mean": sum(d) / len(d), "mad": sum(abs(x) for x in d) / len(d),
+                  "higher": sum(x > 0 for x in d), "n": len(d)}
     return out
+
+
+def oracle_vs_truth(runs: list[dict]) -> list[str]:
+    """Can the model recover the truth when the data is perfect? (R-01)"""
+    L = ["| Run | TV mROI: oracle / truth | Digital mROI: oracle / truth | Email mROI: oracle / truth | Truth: shift | Oracle P(helps) |",
+         "|---|---|---|---|---|---|"]
+    ratios = []
+    for r in runs:
+        o, t = r["versions"]["oracle"], r["truth"]
+        cells = []
+        for c in ("tv", "digital", "email"):
+            ratio = o["marginal_roi"][c]["mean"] / t["marginal_roi"][c]
+            cells.append(f"{o['marginal_roi'][c]['mean']:.2f} / {t['marginal_roi'][c]:.2f} ({ratio:.0%})")
+            if c == "tv":
+                ratios.append(ratio)
+        L.append(f"| {r['scenario']} | " + " | ".join(cells) + f" | {t['verdict_if_known']} | {o['p_shift_helps']:.2f} |")
+    ratios.sort()
+    L += ["", f"Median TV mROI recovered on perfect data: **{ratios[len(ratios)//2]:.0%} of truth** "
+              f"(range {ratios[0]:.0%} to {ratios[-1]:.0%}, {len(ratios)} runs)."]
+    return L
 
 
 def build() -> str:
@@ -94,8 +138,16 @@ def build() -> str:
         L += [f"| {v} | {tl[v]['correct_confident']} | {tl[v]['not_supported']} | {tl[v]['wrong_confident']} |" for v in VERS]
         b = bias_vs_oracle(allr)
         L += ["", "### How far each version moves P(shift helps) away from the perfect-data oracle", "",
-              "| Version | Mean change in P vs oracle | Runs where P is higher than oracle |", "|---|---|---|"]
-        L += [f"| {v} | {b[v]['mean']:+.3f} | {b[v]['higher']} of {b[v]['n']} |" for v in VERS if v != "oracle"]
+              "Monte Carlo standard error of each P is about 0.02, so gaps under about 0.05 are noise.", "",
+              "| Version | Mean change in P vs oracle | Mean absolute change | Runs where P is higher than oracle |",
+              "|---|---|---|---|"]
+        L += [f"| {v} | {b[v]['mean']:+.3f} | {b[v]['mad']:.3f} | {b[v]['higher']} of {b[v]['n']} |"
+              for v in VERS if v != "oracle"]
+        L += ["", "### Can the model recover the truth on perfect data? (oracle vs truth, all runs)", ""]
+        L += oracle_vs_truth(allr)
+        fl = flagged(allr)
+        L += ["", f"### Convergence flags (r-hat > {RHAT_MAX} or > {DIV_MAX} divergences; left out of tallies)", ""]
+        L += [f"- {x}" for x in fl] if fl else ["- none"]
         main = next((r for r in runs if r["scenario"] == "main"), None)
         if main:
             L += ["", "### Recovery of true effects, main scenario (mean [90% interval])", ""] + recovery_table(main)
@@ -114,7 +166,8 @@ def build() -> str:
               "| Field | Raw accuracy | After verification |", "|---|---|---|"]
         L += [f"| {f} | {s[f]['raw_accuracy']:.0%} | {s[f]['verified_accuracy']:.0%} |"
               for f in ("grain", "calendar_system", "week_start_day", "date_label")]
-        L += ["", f"Misaligned specs that passed the gate: **{s['unsafe_passes']} of {s['n_specs']}**.", ""]
+        L += ["", f"Misaligned specs that passed, went to human review only as a warning, or got a wrong transform: "
+                  f"**{s['unsafe_passes']} of {s['n_misaligned']}** (out of {s['n_specs']} specs).", ""]
     out = "\n".join(L)
     (ROOT / "docs" / "results_log.md").write_text(out)
     return out

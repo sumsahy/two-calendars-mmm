@@ -139,7 +139,7 @@ th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--hairline)}th
 
 <section class="card" aria-labelledby="h-mroi">
  <h2 id="h-mroi">3. What the decision should rest on: marginal ROI at current spend</h2>
- <p class="note">Revenue from the next dollar. Contribution share (chart 2) is not a reason to move budget; marginal ROI is.</p>
+ <p class="note">Revenue from the next dollar. Contribution share (chart 2) is not a reason to move budget; marginal ROI is. Note how far even the oracle (perfect data) sits below the true TV value: the monthly model recovers about half of TV's true marginal ROI on perfect data (independent review, R-01), which tilts every version toward the shift.</p>
  <div id="mroiChart"></div>
  <details><summary>Table view</summary><div id="mroiTable"></div></details>
 </section>
@@ -171,7 +171,7 @@ const CH = [["tv","TV"],["digital","Digital"],["email","Email"]];
 const PRIOR_LABEL = {spend_share:"Spend-share prior (main)", equal:"Equal prior (sensitivity)"};
 const SC_NOTE = {
  main:"Main world: a close call at the margin between TV and digital. Truth: the shift helps a little.",
- tv_clearly_better:"TV has the higher marginal ROI. Truth: the shift HURTS sales.",
+ tv_clearly_better:"TV has the higher marginal ROI (a mirror of main, equally close to the boundary). Truth: the shift HURTS sales.",
  digital_clearly_better:"TV is heavily saturated. Truth: the shift helps.",
  always_on_tv:"TV runs every week instead of in bursts.",
  high_tv_digital_corr:"Digital budgets move with TV flights (correlation 0.7).",
@@ -303,9 +303,9 @@ function validation(){const box=document.getElementById("valBox"); box.replaceCh
  box.appendChild(h); const t=document.createElement("div"); t.id="valT"; box.appendChild(t);
  table("valT",["File","Status","Transform","Findings"],rows);
  if(DATA.eval){const e=DATA.eval; const p=document.createElement("p"); p.className="note";
-  p.textContent=`Spec-reader evaluation on ${e.n_specs} labelled vendor specs (week-ending labels, fiscal 4-4-5, broadcast months, a prompt injection, a mid-series grain change): misaligned specs that slipped through as PASS = ${e.unsafe_passes}. Field accuracy: grain ${pct(e.grain.raw_accuracy)}, calendar ${pct(e.calendar_system.raw_accuracy)}, week start ${pct(e.week_start_day.raw_accuracy)}, date label ${pct(e.date_label.raw_accuracy)}. Recorded readings were produced by Claude, which also wrote the labels, so this is not an independent score; the live Groq run is the independent check.`;
+  p.textContent=`Spec-reader evaluation on ${e.n_specs} labelled vendor specs (week-ending labels, fiscal 4-4-5, broadcast months, a prompt injection, a mid-series grain change): misaligned specs that got through (passed, only warned, or got a wrong transform) = ${e.unsafe_passes} of ${e.n_misaligned}. Field accuracy: grain ${pct(e.grain.raw_accuracy)}, calendar ${pct(e.calendar_system.raw_accuracy)}, week start ${pct(e.week_start_day.raw_accuracy)}, date label ${pct(e.date_label.raw_accuracy)}. Recorded readings were produced by Claude, which also wrote the labels, so this is not an independent score; the live Groq run is the independent check.`;
   box.appendChild(p);}
- const p2=document.createElement("p"); p2.className="note"; p2.textContent="Proven by tests: a hallucinated quote is discarded; an LLM that obeys an injected instruction is overruled by the data profile; a vendor that silently switches to week-ending dates is blocked; an unregistered file is never joined.";
+ const p2=document.createElement("p"); p2.className="note"; p2.textContent="Proven by tests: a quote with one word swapped is rejected; a real quote that does not say the claimed value is discarded; a fiscal-month file cannot pass as calendar months; an LLM that obeys an injected instruction is overruled; a silent switch to week-ending dates, off-weekday rows, gaps, negative spend and TV that does not cover the sales window are all blocked. Version 1 used fuzzy matching and an independent review broke it three ways; each break is now a test.";
  box.appendChild(p2);}
 
 // ------------------------------------------------------------------ wiring

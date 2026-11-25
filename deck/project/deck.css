@@ -33,10 +33,10 @@ table{font-size:28px;color:var(--ink);width:100%}
 .step p{font-size:26px}
 .arrow{width:64px;display:flex;align-items:center;justify-content:center}
 .arrow x-shape{width:40px;height:20px}
-.rung{display:flex;gap:28px;align-items:flex-start;padding:16px 0;border-top:2px solid var(--line)}
-.rung p.n{font-family:'Space Grotesk',Arial,sans-serif;font-size:44px;font-weight:700;color:var(--blue);width:64px}
-.rung h3{font-size:32px;margin:0 0 4px}
-.rung p{font-size:26px}
+.rung{display:flex;gap:28px;align-items:flex-start;padding:10px 0;border-top:2px solid var(--line)}
+.rung p.n{font-family:'Space Grotesk',Arial,sans-serif;font-size:40px;font-weight:700;color:var(--blue);width:64px}
+.rung h3{font-size:28px;margin:0 0 2px}
+.rung p{font-size:24px}
 section.accent{background:#1F4FA3;color:#EEF3FC}
 .accent h2,.accent h3{color:#FFFFFF}
 .accent .eyebrow{color:#CFE0FF}

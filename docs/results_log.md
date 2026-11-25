@@ -23,7 +23,7 @@ Cells show P(15% shift helps) and the pre-registered verdict (n.s. = not support
 |---|---|---|---|---|---|
 | main__seed1 | Helps (+0.28%) | 0.79 n.s. (leans holds) | 0.52 n.s. (leans holds) | 0.92 Holds | 0.77 n.s. (leans holds) |
 | main__seed2 | Helps (+0.27%) | 0.63 n.s. (leans holds) | 0.59 n.s. (leans holds) | 0.65 n.s. (leans holds) | 0.68 n.s. (leans holds) |
-| main__seed3 | Helps (+0.25%) | 0.69 n.s. (leans holds) | 0.65 n.s. (leans holds) | 0.78 n.s. (leans holds) | 0.69 n.s. (leans holds) |
+| main__seed3 | Helps (+0.25%) | 0.69 n.s. (leans holds) | 0.65 (not converged) | 0.78 n.s. (leans holds) | 0.69 n.s. (leans holds) |
 | tv_clearly_better__seed1 | Hurts (-0.25%) | 0.75 n.s. (leans holds) | 0.40 n.s. (leans rev.) | 0.88 Holds **WRONG** | 0.76 n.s. (leans holds) |
 | tv_clearly_better__seed2 | Hurts (-0.29%) | 0.49 n.s. (leans rev.) | 0.49 n.s. (leans rev.) | 0.56 n.s. (leans holds) | 0.53 n.s. (leans holds) |
 | tv_clearly_better__seed3 | Hurts (-0.27%) | 0.60 n.s. (leans holds) | 0.35 n.s. (leans rev.) | 0.73 n.s. (leans holds) | 0.61 n.s. (leans holds) |
@@ -33,17 +33,43 @@ Cells show P(15% shift helps) and the pre-registered verdict (n.s. = not support
 | Version | Confident and right | Not supported | Confident and WRONG |
 |---|---|---|---|
 | oracle | 0 | 13 | 0 |
-| naive_445 | 0 | 13 | 0 |
+| naive_445 | 0 | 12 | 0 |
 | naive_weekstart | 2 | 10 | 1 |
 | corrected | 0 | 13 | 0 |
 
 ### How far each version moves P(shift helps) away from the perfect-data oracle
 
-| Version | Mean change in P vs oracle | Runs where P is higher than oracle |
-|---|---|---|
-| naive_445 | -0.078 | 3 of 13 |
-| naive_weekstart | +0.093 | 12 of 13 |
-| corrected | +0.009 | 9 of 13 |
+Monte Carlo standard error of each P is about 0.02, so gaps under about 0.05 are noise.
+
+| Version | Mean change in P vs oracle | Mean absolute change | Runs where P is higher than oracle |
+|---|---|---|---|
+| naive_445 | -0.081 | 0.090 | 3 of 12 |
+| naive_weekstart | +0.093 | 0.096 | 12 of 13 |
+| corrected | +0.009 | 0.029 | 9 of 13 |
+
+### Can the model recover the truth on perfect data? (oracle vs truth, all runs)
+
+| Run | TV mROI: oracle / truth | Digital mROI: oracle / truth | Email mROI: oracle / truth | Truth: shift | Oracle P(helps) |
+|---|---|---|---|---|---|
+| always_on_tv | 0.34 / 1.02 (33%) | 0.90 / 1.16 (78%) | 0.72 / 1.90 (38%) | Helps | 0.79 |
+| digital_clearly_better | 0.48 / 0.59 (81%) | 0.98 / 1.16 (84%) | 1.15 / 1.90 (61%) | Helps | 0.71 |
+| high_tv_digital_corr | 0.66 / 0.98 (67%) | 1.08 / 1.16 (94%) | 1.12 / 1.90 (59%) | Helps | 0.59 |
+| long_tv_adstock | 0.41 / 0.98 (42%) | 0.95 / 1.16 (82%) | 1.15 / 1.90 (61%) | Helps | 0.73 |
+| main | 0.69 / 0.98 (70%) | 1.01 / 1.16 (87%) | 1.12 / 1.90 (59%) | Helps | 0.58 |
+| tv_clearly_better | 0.85 / 1.40 (61%) | 1.09 / 1.16 (94%) | 1.08 / 1.90 (57%) | Hurts | 0.51 |
+| two_years_only | 1.00 / 1.00 (100%) | 1.32 / 1.15 (115%) | 0.91 / 1.90 (48%) | Helps | 0.51 |
+| main__seed1 | 0.41 / 0.98 (42%) | 1.26 / 1.16 (109%) | 0.80 / 1.90 (42%) | Helps | 0.79 |
+| main__seed2 | 0.58 / 0.99 (59%) | 1.07 / 1.16 (92%) | 0.69 / 1.90 (36%) | Helps | 0.63 |
+| main__seed3 | 0.35 / 0.99 (36%) | 0.67 / 1.16 (58%) | 1.11 / 1.90 (58%) | Helps | 0.69 |
+| tv_clearly_better__seed1 | 0.50 / 1.39 (36%) | 1.31 / 1.16 (114%) | 0.80 / 1.90 (42%) | Hurts | 0.75 |
+| tv_clearly_better__seed2 | 0.77 / 1.40 (55%) | 1.05 / 1.16 (91%) | 0.73 / 1.90 (38%) | Hurts | 0.49 |
+| tv_clearly_better__seed3 | 0.47 / 1.41 (33%) | 0.71 / 1.16 (61%) | 1.12 / 1.90 (59%) | Hurts | 0.60 |
+
+Median TV mROI recovered on perfect data: **55% of truth** (range 33% to 100%, 13 runs).
+
+### Convergence flags (r-hat > 1.05 or > 20 divergences; left out of tallies)
+
+- main__seed3 / naive_445: r-hat 1.524, 234 divergences
 
 ### Recovery of true effects, main scenario (mean [90% interval])
 
@@ -71,7 +97,7 @@ Cells show P(15% shift helps) and the pre-registered verdict (n.s. = not support
 |---|---|---|---|---|---|
 | always_on_tv | Helps (+0.22%) | 0.83 Holds | 0.81 Holds | 0.85 Holds | 0.80 Holds |
 | digital_clearly_better | Helps (+0.88%) | 0.83 Holds | 0.86 Holds | 0.88 Holds | 0.83 Holds |
-| high_tv_digital_corr | Helps (+0.28%) | 0.71 n.s. (leans holds) | 0.75 n.s. (leans holds) | 0.86 Holds | 0.75 n.s. (leans holds) |
+| high_tv_digital_corr | Helps (+0.28%) | 0.71 (not converged) | 0.75 n.s. (leans holds) | 0.86 Holds | 0.75 n.s. (leans holds) |
 | long_tv_adstock | Helps (+0.29%) | 0.86 Holds | 0.90 Holds | 0.90 Holds | 0.86 Holds |
 | main | Helps (+0.28%) | 0.75 n.s. (leans holds) | 0.76 n.s. (leans holds) | 0.86 Holds | 0.78 n.s. (leans holds) |
 | tv_clearly_better | Hurts (-0.30%) | 0.70 n.s. (leans holds) | 0.68 n.s. (leans holds) | 0.85 Holds **WRONG** | 0.69 n.s. (leans holds) |
@@ -92,18 +118,44 @@ Cells show P(15% shift helps) and the pre-registered verdict (n.s. = not support
 
 | Version | Confident and right | Not supported | Confident and WRONG |
 |---|---|---|---|
-| oracle | 5 | 7 | 1 |
+| oracle | 5 | 6 | 1 |
 | naive_445 | 3 | 10 | 0 |
 | naive_weekstart | 7 | 3 | 3 |
 | corrected | 5 | 8 | 0 |
 
 ### How far each version moves P(shift helps) away from the perfect-data oracle
 
-| Version | Mean change in P vs oracle | Runs where P is higher than oracle |
-|---|---|---|
-| naive_445 | -0.075 | 4 of 13 |
-| naive_weekstart | +0.068 | 11 of 13 |
-| corrected | +0.009 | 9 of 13 |
+Monte Carlo standard error of each P is about 0.02, so gaps under about 0.05 are noise.
+
+| Version | Mean change in P vs oracle | Mean absolute change | Runs where P is higher than oracle |
+|---|---|---|---|
+| naive_445 | -0.085 | 0.098 | 3 of 12 |
+| naive_weekstart | +0.061 | 0.062 | 10 of 12 |
+| corrected | +0.006 | 0.020 | 8 of 12 |
+
+### Can the model recover the truth on perfect data? (oracle vs truth, all runs)
+
+| Run | TV mROI: oracle / truth | Digital mROI: oracle / truth | Email mROI: oracle / truth | Truth: shift | Oracle P(helps) |
+|---|---|---|---|---|---|
+| always_on_tv | 0.28 / 1.02 (28%) | 0.86 / 1.16 (74%) | 1.01 / 1.90 (53%) | Helps | 0.83 |
+| digital_clearly_better | 0.42 / 0.59 (71%) | 0.87 / 1.16 (75%) | 2.70 / 1.90 (142%) | Helps | 0.83 |
+| high_tv_digital_corr | 0.61 / 0.98 (62%) | 0.94 / 1.16 (81%) | 2.74 / 1.90 (144%) | Helps | 0.71 |
+| long_tv_adstock | 0.36 / 0.98 (37%) | 0.87 / 1.16 (75%) | 2.83 / 1.90 (149%) | Helps | 0.86 |
+| main | 0.58 / 0.98 (59%) | 0.95 / 1.16 (82%) | 2.81 / 1.90 (148%) | Helps | 0.75 |
+| tv_clearly_better | 0.71 / 1.40 (51%) | 1.00 / 1.16 (87%) | 2.97 / 1.90 (156%) | Hurts | 0.70 |
+| two_years_only | 0.83 / 1.00 (83%) | 1.32 / 1.15 (115%) | 2.18 / 1.90 (115%) | Helps | 0.68 |
+| main__seed1 | 0.40 / 0.98 (41%) | 1.16 / 1.16 (101%) | 1.47 / 1.90 (78%) | Helps | 0.81 |
+| main__seed2 | 0.50 / 0.99 (51%) | 1.04 / 1.16 (90%) | 1.01 / 1.90 (53%) | Helps | 0.71 |
+| main__seed3 | 0.33 / 0.99 (33%) | 0.64 / 1.16 (55%) | 2.45 / 1.90 (128%) | Helps | 0.81 |
+| tv_clearly_better__seed1 | 0.46 / 1.39 (33%) | 1.23 / 1.16 (106%) | 1.61 / 1.90 (85%) | Hurts | 0.80 |
+| tv_clearly_better__seed2 | 0.67 / 1.40 (48%) | 0.97 / 1.16 (84%) | 1.07 / 1.90 (57%) | Hurts | 0.56 |
+| tv_clearly_better__seed3 | 0.43 / 1.41 (30%) | 0.67 / 1.16 (58%) | 2.31 / 1.90 (121%) | Hurts | 0.74 |
+
+Median TV mROI recovered on perfect data: **48% of truth** (range 28% to 83%, 13 runs).
+
+### Convergence flags (r-hat > 1.05 or > 20 divergences; left out of tallies)
+
+- high_tv_digital_corr / oracle: r-hat 1.013, 21 divergences
 
 ### Recovery of true effects, main scenario (mean [90% interval])
 
@@ -123,4 +175,4 @@ Cells show P(15% shift helps) and the pre-registered verdict (n.s. = not support
 | week_start_day | 92% | 92% |
 | date_label | 92% | 92% |
 
-Misaligned specs that passed the gate: **0 of 12**.
+Misaligned specs that passed, went to human review only as a warning, or got a wrong transform: **0 of 9** (out of 12 specs).

@@ -36,6 +36,10 @@ def run_scenario(name: str, cfg: dict, out_root="results", data_root="data", dra
     t0 = time.time()
     sdir = write_scenario(name, cfg, data_root)
     vendor = sdir / "vendor"
+    from .validation.run import run_gate  # the refresh gate runs before any model is fitted
+    gate = run_gate(vendor)
+    if gate["status"] == "BLOCK":
+        raise RuntimeError(f"refresh gate BLOCKED {name}: see validation report")
     tv_weekly = pd.read_csv(vendor / "tv_media_weekly.csv", parse_dates=["week_start"])
     truth_daily = pd.read_csv(sdir / "_truth" / "truth_daily.csv", parse_dates=["date"])
     truth = json.loads((sdir / "_truth" / "truth_summary.json").read_text())

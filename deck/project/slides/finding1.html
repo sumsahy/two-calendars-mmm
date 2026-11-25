@@ -4,7 +4,7 @@
 <table style="font-size:26px">
 <tr><th style="width:28%">World (one seed each)</th><th style="width:16%">Truth</th><th style="width:14%">Oracle</th><th style="width:14%">Naive 4-4-5</th><th style="width:14%">Naive week-start</th><th style="width:14%">Corrected</th></tr>
 <tr><td>Main (close call)</td><td>Helps</td><td>0.58</td><td>0.59</td><td style="color:#B9501C">0.75</td><td style="color:#2563C9">0.66</td></tr>
-<tr><td>TV clearly better</td><td style="color:#B3261E">Hurts</td><td>0.51</td><td>0.45</td><td style="color:#B9501C">0.71</td><td style="color:#2563C9">0.53</td></tr>
+<tr><td>TV better (mirror of main)</td><td style="color:#B3261E">Hurts</td><td>0.51</td><td>0.45</td><td style="color:#B9501C">0.71</td><td style="color:#2563C9">0.53</td></tr>
 <tr><td>Digital clearly better</td><td>Helps</td><td>0.71</td><td>0.72</td><td style="color:#B9501C">0.75</td><td style="color:#2563C9">0.67</td></tr>
 <tr><td>TV always on</td><td>Helps</td><td>0.79</td><td>0.76</td><td style="color:#B9501C">0.82 Holds</td><td style="color:#2563C9">0.72</td></tr>
 <tr><td>Digital moves with TV</td><td>Helps</td><td>0.59</td><td>0.57</td><td style="color:#B9501C">0.77</td><td style="color:#2563C9">0.59</td></tr>
@@ -12,6 +12,6 @@
 <tr><td>Two years only</td><td>Helps</td><td>0.51</td><td>0.51</td><td style="color:#B9501C">0.49</td><td style="color:#2563C9">0.53</td></tr>
 <tr><td><b>Avg change vs oracle, 13 runs</b></td><td></td><td></td><td>−0.08</td><td style="color:#B9501C">+0.09</td><td style="color:#2563C9">+0.01</td></tr>
 </table>
-<p class="foot" style="display:block">Cells: P(15% shift raises sales), spend-share prior. Under 0.80 = not supported. In 3 more “TV clearly better” histories, week-start called the harmful shift “Holds” at 0.88; oracle and corrected never did.</p>
-<aside>Mechanism: week-start moves spend into the month a week starts, ahead of when it airs and works. TV looks less tied to sales, its marginal ROI drops (0.50 vs 0.69 on perfect data) and digital, which partly moves with TV, picks up the credit (1.31 vs 1.01). The 4-4-5 rollup understates TV's share more (9.1% vs 11.6%) but its error swings both ways, so the verdict barely moves. Equal-prior sensitivity: week-start +0.07 vs oracle and a confident Holds in the world where the shift hurts.</aside>
+<p class="foot" style="display:block">Cells: P(15% shift raises sales), spend-share prior; under 0.80 = not supported. Mean absolute change vs oracle: corrected 0.03, 4-4-5 0.09, week-start 0.10 (noise about 0.02).</p>
+<aside>Mechanism: week-start moves spend into the month a week starts, ahead of when it airs and works. TV looks less tied to sales, its marginal ROI drops (0.50 vs 0.69 on perfect data) and digital, which partly moves with TV, picks up the credit (1.31 vs 1.01). The 4-4-5 rollup understates TV's share (9.1% vs 11.6%) and adds noise that drags P down by up to 0.35 in some histories: noise hides signal rather than faking it. Equal-prior sensitivity: week-start +0.07 vs oracle and a confident Holds in the world where the shift hurts.</aside>
 </section>

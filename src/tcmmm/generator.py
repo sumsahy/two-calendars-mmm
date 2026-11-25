@@ -10,7 +10,7 @@ ONLY for scoring. The modelling code never reads it.
 
 True response per channel c on day t:
     adstock_t = spend_t + alpha_c * adstock_{t-1}          alpha_c = 0.5 ** (1 / half_life_days)
-    contrib_t = beta_c * (1 - exp(-adstock_t / k_c))       k_c = mean(adstock) / saturation_c
+    contrib_t = beta_c * (1 - exp(-adstock_t / k_c))       k_c = mean(adstock) / saturation_c   (e-folding scale; half-saturation is at k_c * ln 2)
 beta_c is calibrated so that total contribution / total spend = avg_roi_c over the window.
 """
 from __future__ import annotations

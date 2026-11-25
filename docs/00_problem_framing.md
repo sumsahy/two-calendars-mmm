@@ -15,7 +15,7 @@ Six months ago the team built a marketing mix model (MMM) for a mid-size diabete
 
 | ID | Hypothesis | How we test it |
 |---|---|---|
-| H1 | Naive rollups distort monthly TV materially. 5-week media periods carry 13-17% more days than their calendar month; 4-week periods carry 3-10% fewer | `aggregate.py` distortion table on synthetic data with known daily truth |
+| H1 | Naive rollups distort monthly TV materially. 5-week media periods carry 13-17% more days than their calendar month; 4-week periods carry 3-10% fewer *(correction after review R-16: 0-10% fewer, and a 53-week year's last period runs 6 weeks, up to 35% more)* | `aggregate.py` distortion table on synthetic data with known daily truth |
 | H2 | The distortion acts like measurement error in the TV variable, which tends to **understate** TV's effect (attenuation). That biases the model toward moving money out of TV | Compare TV contribution and marginal ROI from naive vs corrected fits against the known truth |
 | H3 | Whether the recommendation flips depends on how close TV and digital were at the margin. Far from the boundary, no data error flips the decision | Scenario sweep across close-call and clear-cut worlds |
 | H4 | Separate from the calendar issue, the original memo used **contribution share** to justify reallocation. Reallocation should depend on **marginal ROI** at current spend | Report marginal ROI and the simulated 15% shift, not just shares |

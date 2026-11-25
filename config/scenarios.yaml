@@ -4,7 +4,7 @@
 # Units: spend and sales in USD. Sales are monthly net revenue of a mid-size diabetes brand.
 # Half-lives are in days (truth is simulated at daily grain).
 # avg_roi = true total contribution / total spend over the analysis window.
-# saturation = mean adstocked level / half-saturation scale. Higher = more saturated,
+# saturation = mean adstocked level / saturation scale k (response = 1 - exp(-x / k)). Higher = more saturated,
 #              so marginal ROI falls further below average ROI.
 
 defaults:

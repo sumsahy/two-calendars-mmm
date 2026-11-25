@@ -35,7 +35,12 @@
         "grain": "weekly",
         "calendar_system": "media_445",
         "week_start_day": "monday",
-        "date_label": "period_start"
+        "date_label": "period_start",
+        "_spec_scan": {
+          "week_start_day": "monday",
+          "calendar_system": "media_445",
+          "injection": false
+        }
       },
       "transform": "apportion_by_day(week_start_day=monday, date_label=period_start)",
       "llm_mode": "recorded",
@@ -59,6 +64,7 @@
           "media_period",
           "media_year"
         ],
+        "bad_values": {},
         "spacing_days_counts": {
           "7": 157
         },
@@ -73,14 +79,19 @@
         {
           "rung": "contract",
           "status": "PASS",
-          "message": "calendar months, joins directly"
+          "message": "calendar months (LLM and spec scan agree), joins directly"
         }
       ],
       "accepted": {
         "grain": "monthly",
         "calendar_system": "gregorian",
         "week_start_day": "not_applicable",
-        "date_label": "period_start"
+        "date_label": "period_start",
+        "_spec_scan": {
+          "week_start_day": null,
+          "calendar_system": "gregorian",
+          "injection": false
+        }
       },
       "transform": null,
       "llm_mode": "recorded",
@@ -101,6 +112,7 @@
         "all_first_of_month": true,
         "duplicates": 0,
         "period_columns": [],
+        "bad_values": {},
         "spacing_days_counts": {
           "31": 20,
           "30": 12,
@@ -117,14 +129,19 @@
         {
           "rung": "contract",
           "status": "PASS",
-          "message": "calendar months, joins directly"
+          "message": "calendar months (LLM and spec scan agree), joins directly"
         }
       ],
       "accepted": {
         "grain": "monthly",
         "calendar_system": "gregorian",
         "week_start_day": "not_applicable",
-        "date_label": "period_start"
+        "date_label": "period_start",
+        "_spec_scan": {
+          "week_start_day": null,
+          "calendar_system": "gregorian",
+          "injection": false
+        }
       },
       "transform": null,
       "llm_mode": "recorded",
@@ -145,6 +162,7 @@
         "all_first_of_month": true,
         "duplicates": 0,
         "period_columns": [],
+        "bad_values": {},
         "spacing_days_counts": {
           "31": 20,
           "30": 12,
@@ -161,14 +179,19 @@
         {
           "rung": "contract",
           "status": "PASS",
-          "message": "calendar months, joins directly"
+          "message": "calendar months (LLM and spec scan agree), joins directly"
         }
       ],
       "accepted": {
         "grain": "monthly",
         "calendar_system": "gregorian",
         "week_start_day": "not_applicable",
-        "date_label": "period_start"
+        "date_label": "period_start",
+        "_spec_scan": {
+          "week_start_day": null,
+          "calendar_system": "gregorian",
+          "injection": false
+        }
       },
       "transform": null,
       "llm_mode": "recorded",
@@ -189,6 +212,7 @@
         "all_first_of_month": true,
         "duplicates": 0,
         "period_columns": [],
+        "bad_values": {},
         "spacing_days_counts": {
           "31": 20,
           "30": 12,

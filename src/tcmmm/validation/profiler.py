@@ -51,6 +51,19 @@ def infer_grain(dates: pd.Series) -> tuple[str, dict]:
     return g, {"spacing_days_counts": {int(k): int(v) for k, v in counts.items()}}
 
 
+def _bad_values(df: pd.DataFrame, date_col: str) -> dict:
+    """Negative or missing values in the measure columns (spend, revenue)."""
+    out = {}
+    for c in df.columns:
+        if c == date_col or c in PERIOD_COLUMNS or c == "week_in_year":
+            continue
+        x = pd.to_numeric(df[c], errors="coerce")
+        n_nan, n_neg = int(x.isna().sum()), int((x < 0).sum())
+        if n_nan or n_neg:
+            out[c] = {"missing_or_non_numeric": n_nan, "negative": n_neg}
+    return out
+
+
 def profile(path: str | Path) -> dict:
     df = pd.read_csv(path)
     col = find_date_column(df)
@@ -70,6 +83,7 @@ def profile(path: str | Path) -> dict:
         "all_first_of_month": bool((dates.dt.day == 1).all()),
         "duplicates": int(dates.duplicated().sum()),
         "period_columns": [c for c in PERIOD_COLUMNS if c in df.columns],
+        "bad_values": _bad_values(df, col),
         **extra,
     }
     if grain == "weekly":

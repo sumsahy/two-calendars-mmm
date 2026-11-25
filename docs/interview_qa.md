@@ -5,13 +5,13 @@ Short answers first; the detail is one click away in the repo.
 ## Framing
 
 **Q: What is the actual problem?**
-TV arrives in Monday-to-Sunday media weeks grouped into 4-4-5 periods. Digital, email and sales arrive in calendar months. If TV is rolled up the naive way, money lands in the wrong month (5-week periods carry 13-17% more days than their month, 4-week periods 3-10% fewer), so the model learns from misaligned data.
+TV arrives in Monday-to-Sunday media weeks grouped into 4-4-5 periods. Digital, email and sales arrive in calendar months. If TV is rolled up the naive way, money lands in the wrong month (5-week periods carry 13-17% more days than their month, 4-week periods 0-10% fewer, and up to 35% more in the 6-week period of a 53-week year), so the model learns from misaligned data.
 
 **Q: Why build synthetic data instead of using Robyn's or Meridian's sample?**
 Because the question is "which version gets closer to the truth", and only synthetic data has a known truth per channel. The sample datasets have no per-channel ground truth (D-003).
 
 **Q: Didn't you just design the data so the naive version fails?**
-Three guards. The decision rule and scenario config were committed to git before any model ran (see the first commit). The main scenario is a deliberate close call, and the sweep includes worlds where the naive version should NOT flip anything (D-009). And the truth delivers TV unevenly inside the week, so even our fix is not right by construction (D-010).
+Three guards, one honest gap. The decision rule and scenario config were committed to git before any model ran (see the first commit); the prior used for the main analysis was not, and I say so (L-11). The main scenario is a deliberate close call, and the sweep includes worlds where the naive version should NOT flip anything (D-009). And the truth delivers TV unevenly inside the week, so even our fix is not right by construction (D-010).
 
 ## Method
 
@@ -28,7 +28,10 @@ Ask 3 wants uncertainty intervals; Bayesian gives them natively (Robyn's ridge r
 Chosen before fitting as a business-decision bar. With 36 data points, 0.90 or 0.95 would make almost everything "inconclusive", which tells the client nothing (D-004).
 
 **Q: What was the surprise?**
-Even with perfect data, the model inflated email (about 11% of sales vs a true 4%). Equal priors on spend scaled by each channel's average quietly assume a dollar of email is worth much more than a dollar of TV. That biases any model toward "move money into small channels", independent of the calendar bug (D-015).
+The independent review found that our "perfect data" benchmark is itself biased against TV. The truth saturates day by day; a monthly model saturates monthly totals, so on perfect data it recovers only about half of TV's true marginal ROI. That tilts every version toward "the shift helps". On top of that, equal priors inflated email (11% of sales vs a true 4%). So the model form and the priors push toward the original recommendation independent of the calendar bug. The honest answer is that the 15% shift is not supported, and the tools we'd normally use to support it lean in its favour (R-01, R-02).
+
+**Q: What did the independent review change?**
+It found the oracle bias above, three ways the LLM could loosen the gate (all closed and now tests), an eval metric that couldn't fail, a post-hoc prior choice, and unconverged fits counted in tallies. All dispositions are in `docs/review_findings.md`. We chose not to rerun the model in the time left (D-019) and to state the bias as a finding instead.
 
 ## The LLM part
 
@@ -36,13 +39,13 @@ Even with perfect data, the model inflated email (about 11% of sales vs a true 4
 The data can tell you grain and which weekday dates fall on. It cannot tell you whether a Sunday date means "week starting Sunday" or "week ending Sunday", or whether a first-of-month date is a calendar month or a fiscal month. Those facts live only in the vendor spec, which is free text. The LLM reads what the data can't say; the data checks what the LLM can't be trusted to say.
 
 **Q: How do you know the LLM is right?**
-Four rungs: schema (allowed values only), grounding (every claim must quote the spec verbatim; quotes are checked), data cross-check (claims must match the file's own profile), contract (anything unknown blocks). The LLM can only make the gate stricter, never looser. Tests prove a hallucinated quote is discarded, an LLM that obeys an injected instruction is overruled, and a silent switch to week-ending dates is blocked.
+Five rungs: schema (allowed values only); grounding (the quote must appear verbatim, at least two words, and must itself support the value, checked by deterministic rules); an independent regex scan of the spec that blocks on any disagreement; a data cross-check against the file's own profile; and a contract where anything unknown blocks and a monthly file vouched for only by the LLM goes to a human. The first version used fuzzy quote matching and the reviewer broke it with one-word swaps; that's why it's exact now. Tests prove each break is closed.
 
 **Q: What if the LLM is down or the key is missing?**
 Recorded mode. CI runs on recorded readings, so the gate never depends on an API being up. Live mode is for refreshing readings when a spec changes.
 
-**Q: Is your 12/12 eval score meaningful?**
-Not on its own: Claude wrote both the labels and the recorded readings. That's stated in the report. The independent check is the live Groq run plus a human review of the labels (L-04).
+**Q: Is your eval score meaningful?**
+0 of 9 misaligned specs got through (passed, only warned, or got a wrong transform); field accuracy 92-100%. Not independent on its own: Claude wrote both the labels and the recorded readings. The independent check is the live Groq run plus a human review of the labels (L-04).
 
 ## Client
 

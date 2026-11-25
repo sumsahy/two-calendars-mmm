@@ -1,0 +1,24 @@
+# Independent review: findings and what we did
+
+A separate Claude agent with no build context reviewed the repo after the first full set of results (read-only, ran its own probes). Below are its findings, ranked as it ranked them, and the disposition of each. **Sumukh chose option C for R-01 and R-02 (D-019): no rerun; report the model's own bias as a headline finding and reword every claim.**
+
+| # | Finding (reviewer's words, condensed) | Severity | Disposition |
+|---|---|---|---|
+| R-01 | **The oracle is biased against TV.** The monthly model cannot represent daily saturation summed to months: even a noise-free least-squares fit gets R² ≈ 0.5 and TV mROI 0.63 vs truth 0.98. On perfect data the model recovers a median of about half of TV's true marginal ROI, which tilts every version toward "the shift helps". One equal-prior oracle fit said "Holds" on a shift that hurts | Changes conclusions | **Headline finding** (results log "Can the model recover the truth on perfect data?", deck Finding 2). Framing's "what would change our mind" test met; stated. Fix not run (D-019): transform at daily grain before summing (L-08) |
+| R-02 | **The saturation prior (lam ~ Gamma(2,1)) shrinks every channel's mROI.** Spend-share email share looks right (5.0% vs 4.2%) but email mROI is 1.12 vs truth 1.90 | Changes conclusions | Disclosed in deck and L-06; share no longer shown alone. Fix not run (D-019) |
+| R-03 | **The LLM could loosen the gate**: (a) wrong week-start claim with a real quote passed the data rung on a week-ending drop; (b) a fiscal-month file read as "gregorian" PASSed; (c) one-word-swap quotes passed fuzzy grounding | Changes conclusions about the guardrail | **Fixed.** Exact-match grounding, two-word minimum, deterministic "does the quote support the value" rules, independent spec scan that BLOCKs on disagreement, LLM-only "calendar month" now WARN not PASS. Each repro is now a test (`tests/test_validation.py`, section R-03) |
+| R-04 | **Eval metric couldn't fail for weekly specs**; "0 of 12" used the wrong denominator | Overclaim | **Fixed.** Unsafe = misaligned spec that PASSes, only WARNs, or gets a transform with the wrong week start or date label. Reported as 0 of 9 misaligned |
+| R-05 | Deck numbers out of date (naive 4-4-5 −0.01 vs −0.08 on all runs; placeholder text; empty README summary; "once" wrong Holds is now 4) | Overclaim | **Fixed** before and after the review; all numbers regenerated from `results_log.md` |
+| R-06 | "+0.00" is a signed mean; errors cancel. Monte Carlo SE ≈ 0.02. All 7 scenarios share one seed (same random draws) | Weak evidence | **Fixed/disclosed.** Mean absolute change added (corrected 0.02 to 0.03 vs 4-4-5 0.09 and week-start 0.06 to 0.10); MC note added; shared seed disclosed (L-03) |
+| R-07 | Finding 2 framed correct oracle "Holds" calls (truth Helps) as bias | Misleading framing | **Fixed.** Slide rewritten around the wrong "Holds" and the mROI recovery numbers |
+| R-08 | The spend-share prior was chosen after seeing equal-prior results; only the 0.80 threshold was pre-registered | Undisclosed | **Disclosed** (L-11, interview Q&A). It was raised to Sumukh as D-015, but it was post hoc |
+| R-09 | Convergence claims false (one fit r-hat 1.52, 234 divergences); no diagnostics gate | Overclaim | **Fixed.** Fits with r-hat > 1.05 or > 20 divergences are flagged and left out of tallies (D-020); L-09 rewritten |
+| R-10 | "TV clearly better" is as close to the boundary as main (−0.30% vs +0.28%), so the sweep isn't clear-cut both ways | Naming | **Disclosed**; labelled "TV better (mirror of main)" in the deck |
+| R-11 | Coverage check dead code: truncated TV passed the gate | Medium | **Fixed.** Gate checks TV weeks cover the sales window; test added |
+| R-12 | `check_transform` tautological (window from the file itself) | Medium | **Fixed.** Uses the sales window |
+| R-13 | Weekday check skipped below 99% purity; missing periods only WARN; negative/NaN/rescaled spend pass | Medium | **Fixed** except rescaling (units change needs the previous refresh as a baseline: L-12). Tests added |
+| R-14 | Lag zero-padding understates month-1 adstock | Medium | Disclosed (L-08) |
+| R-15 | Some priors sit near the known truth (intercept, noise) | Medium | Disclosed (L-13) |
+| R-16 | Day-count claim off (Feb is 0%; 53-week Dec is +35%); "half-saturation" misnamed; twin test tolerance 1e-6 not 1e-9; sweeps used different sampler settings; injection detection relied on the LLM | Minor | Fixed text; injection now detected deterministically; sampler difference disclosed |
+
+Things the reviewer checked and found correct: 4-4-5 mapping and 53-week years, edge clipping and conservation, the NumPy twin, and that the truth and model counterfactuals are the same experiment (same window, same pro-rata split).

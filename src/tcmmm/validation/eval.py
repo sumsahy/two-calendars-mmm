@@ -31,13 +31,20 @@ def evaluate(spec_dir: Path = ROOT / "specs" / "eval") -> dict:
             row[f"{f}_truth"] = truth[f]
             row[f"{f}_raw_ok"] = raw_vals[f] == truth[f]
             row[f"{f}_verified_ok"] = v.accepted.get(f) == truth[f]
-        # the safety property that matters: anything not aligned must never PASS
-        row["unsafe_pass"] = (not truth["aligned_to_calendar_month"]) and v.status == "PASS"
+        # The safety property: a misaligned source must never PASS, and if it gets a TRANSFORM,
+        # the transform must use the right week start and date label (else days land in wrong months).
+        mis = not truth["aligned_to_calendar_month"]
+        wrong_transform = v.status == "TRANSFORM" and (
+            v.accepted.get("week_start_day") != truth["week_start_day"]
+            or v.accepted.get("date_label") != truth["date_label"])
+        row["misaligned"] = mis
+        row["unsafe_pass"] = mis and (v.status in ("PASS", "WARN") or wrong_transform)
         rows.append(row)
     summary = {f: {"raw_accuracy": sum(r[f"{f}_raw_ok"] for r in rows) / len(rows),
                    "verified_accuracy": sum(r[f"{f}_verified_ok"] for r in rows) / len(rows)}
                for f in FIELDS}
     summary["unsafe_passes"] = sum(r["unsafe_pass"] for r in rows)
+    summary["n_misaligned"] = sum(r["misaligned"] for r in rows)
     summary["n_specs"] = len(rows)
     return {"summary": summary, "rows": rows}
 
