@@ -1,0 +1,22 @@
+[project]
+name = "tcmmm"
+version = "0.1.0"
+description = "The Two Calendars: MMM calendar-alignment diagnosis and validation pipeline"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy", "pandas", "pyyaml", "pymc>=5", "arviz", "pydantic>=2", "httpx", "matplotlib",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
